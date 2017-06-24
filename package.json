@@ -1,0 +1,15 @@
+{
+  "name": "reservoir-movies",
+  "version": "1.0.0",
+  "description": "films and series wiki",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "ezequiel mansilla",
+  "license": "ISC",
+  "devDependencies": {
+    "bulma": "^0.4.2",
+    "express": "^4.15.3"
+  }
+}
