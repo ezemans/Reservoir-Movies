@@ -1,23 +1,15 @@
 $(document).ready(function () {
 
-    $.ajax({
-        url: "http://api.tvmaze.com/shows",
-        method: "GET",
-        dataType: "json"
-    })
-        .done(function (json) {
-            var moviesObject = json;
-            console.log(moviesObject);
-            displayMovies(moviesObject);
-        })
-        .fail(function (xhr, status, errorTrown) {
-            console.log("xhr: " + xhr);
-            console.log("status: " + status);
-            console.log("Error: " + errorTrown)
-        })
-        .always(function () {
-            console.log("se ejecuto el ajax")
-        });
+    if (!localStorage.movies) {
+        $.ajax('http://api.tvmaze.com/shows')
+            .then(function (movies) {
+                $(".spinner").remove();
+                localStorage.movies = JSON.stringify(movies);
+                displayMovies(movies);
+            })
+    } else {
+        displayMovies(JSON.parse(localStorage.movies));
+    }
 
     function returnArrayToString(genre) {
         var genero = genre;
@@ -27,6 +19,15 @@ $(document).ready(function () {
             })
         } else {
             return "Sin descripcion"
+        }
+    }
+
+    function nullImage(image) {
+        var imagen = image;
+        if (imagen != null) {
+            return imagen
+        } else {
+            return "No Image"
         }
     }
 
@@ -56,7 +57,7 @@ $(document).ready(function () {
 
         $.each(moviesObject, function (index, movie) {
             groupTemplate += template.replace(":rating:", movie.rating.average)
-                .replace(":image:", movie.image.medium)
+                .replace(":image:", movie.image ? movie.image.medium : '')
                 .replace(":name:", movie.name)
                 .replace(":summary:", movie.summary)
                 .replace(":genre:", returnArrayToString(movie.genre))
@@ -69,6 +70,26 @@ $(document).ready(function () {
         var groupToObject = $(groupTemplate);
         groupToObject.hide();
         $("#content").append(groupToObject.fadeIn(4000));
+    }
+
+    $("#searchTemplate").submit(function (e) {
+        e.preventDefault();
+        var searchWord = $(this).find("#searchContent").val();
+        searchMovie(searchWord);
+    })
+    function searchMovie(searchWord) {
+        $.ajax({
+            url: "http://api.tvmaze.com/search/shows",
+            method: "GET",
+            data: { q: searchWord },
+        })
+            .done(function (res, textStatus, xhr) {
+                $("#content").html("");
+                var movies = res.map(function (el) {
+                    return el.show;
+                })
+                displayMovies(movies);
+            })
     }
 })
 

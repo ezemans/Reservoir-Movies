@@ -10,16 +10,15 @@
 </head>
 <body>
     <div style="padding:30px;">
-        <div class="field is-grouped" id="searchTemplate">
+        <form class="field is-grouped" id="searchTemplate">
             <p class="control is-expanded">
-            <input class="input" type="text" placeholder="Fight club...">
+            <input id="searchContent" class="input" type="text" placeholder="Fight club...">
             </p>
             <p class="control">
-                <a class="button is-info">
-                Buscar
-                </a>
+                <button type="submit" id="searchButton" class="button is-info">Buscar</button>
+                
             </p>
-        </div>
+        </form>
         <div id="content">
             <div class="spinner"></div>
         </div>
